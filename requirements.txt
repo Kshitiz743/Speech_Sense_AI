@@ -1,0 +1,9 @@
+Flask
+SpeechRecognition
+pydub
+numpy
+librosa
+soundfile
+ffmpeg-python
+nltk
+scipy
