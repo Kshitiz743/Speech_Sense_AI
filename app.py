@@ -226,20 +226,7 @@ def processing():
 
 @app.route("/analyze")
 def analyze():
-    if "username" not in session:
-        return redirect("/login")
-
-    if "filepath" not in session:
-        return redirect("/home")
-
-    path = session["filepath"]
-    results = analyze_speech(path)
-
-    return render_template(
-        "result.html",
-        result=results
-    )
-
+     return "Analyze page reached successfully."
 
 if __name__ == "__main__":
     app.run(debug=True)
