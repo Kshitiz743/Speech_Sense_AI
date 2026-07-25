@@ -18,8 +18,7 @@ import os
 import sqlite3
 
 
-app = Flask(__name__)
-app.secret_key = "SpeechSense_AI_Project_2026"
+
 
 
 BASE_DIR = os.path.abspath(
@@ -37,7 +36,35 @@ def get_connection():
     return sqlite3.connect(
             DATABASE_PATH
             )
+def create_database():
 
+    connection = get_connection()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+
+    CREATE TABLE IF NOT EXISTS users(
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    username TEXT NOT NULL,
+
+    email TEXT UNIQUE NOT NULL,
+
+    password TEXT NOT NULL
+
+    )
+
+    """)
+
+    connection.commit()
+
+    connection.close()
+
+    
+app = Flask(__name__)
+app.secret_key = "SpeechSense_AI_Project_2026"
 
 @app.route("/signup")
 def signup_page():
