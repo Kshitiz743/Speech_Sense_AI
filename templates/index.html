@@ -36,7 +36,22 @@ rel="stylesheet">
 
 
 <nav>
+<h3>
 
+Welcome,
+
+{{session.username}}
+
+</h3>
+<a href="/logout">
+
+<button>
+
+Logout
+
+</button>
+
+</a>
 <h2>SpeechSense AI</h2>
 
 
@@ -91,23 +106,83 @@ Intelligence, NLP and Speech Analytics.
 
 
 
-<button class="record"
+<!-- RECORDING STATUS -->
+
+<div class="recording-section">
+
+
+<h2 id="recording-status">
+
+READY TO RECORD
+
+</h2>
+
+
+<h3 id="timer">
+
+00:00
+
+</h3>
+
+
+
+<!-- SOUND WAVES -->
+
+
+<div class="voice-wave"
+id="voice-wave">
+
+
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+
+
+</div>
+
+
+
+<p id="recording-message">
+
+Click Start Recording to Begin
+
+</p>
+
+
+</div>
+
+
+
+<!-- BUTTONS -->
+
+
+<div class="record-buttons">
+
+
+<button class="start-btn"
+
 onclick="startRecording()">
 
-Start Recording
+🎙 START
 
 </button>
 
 
-<br><br>
 
+<button class="stop-btn"
 
-<button class="record"
 onclick="stopRecording()">
 
-Stop Recording
+■ STOP
 
 </button>
+
+
+</div>
 
 
 <br>

@@ -1,106 +1,201 @@
-from flask import Flask
-from flask import render_template
-from flask import redirect
-from flask import request
-from flask import url_for
-from flask import session
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
+
+from flask import (
+    Flask,
+    render_template,
+    redirect,
+    request,
+    session
+)
+
 from audio_converter import convert_audio
-import os
-
-
 from analysis_engine import analyze_speech
+
+import os
+import sqlite3
+
+
 app = Flask(__name__)
 app.secret_key = "SpeechSense_AI_Project_2026"
 
-UPLOAD_FOLDER = os.path.join(
-                    os.getcwd(),
-                    "uploads"
-                    )
+
+def get_connection():
+    return sqlite3.connect("users.db")
 
 
-os.makedirs(
-            UPLOAD_FOLDER,
-            exist_ok=True
-            )
+@app.route("/signup")
+def signup_page():
+    return render_template("signup.html")
 
 
-app.config["UPLOAD_FOLDER"]=UPLOAD_FOLDER
+@app.route("/signup", methods=["POST"])
+def signup():
+    username = request.form["username"]
+    email = request.form["email"]
+    password = request.form["password"]
+
+    hashed_password = generate_password_hash(password)
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO users(
+        username,
+        email,
+        password
+        )
+        VALUES(?,?,?)
+        """,
+        (
+            username,
+            email,
+            hashed_password
+        )
+    )
+
+    connection.commit()
+    connection.close()
+
+    return redirect("/login")
 
 
 @app.route("/")
+def root():
+    return redirect("/login")
+
+
+@app.route("/login", methods=["GET"])
+def login_page():
+    return render_template("login.html")
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.form["email"]
+    password = request.form["password"]
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM users
+        WHERE email=?
+        """,
+        (email,)
+    )
+
+    user = cursor.fetchone()
+    connection.close()
+
+    if user and check_password_hash(
+        user[3],
+        password
+    ):
+        session["username"] = user[1]
+        return redirect("/home")
+
+    return redirect("/login")
+
+
+@app.route("/home")
 def home():
+    if "username" not in session:
+        return redirect("/login")
 
     return render_template("index.html")
 
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
+
+
+UPLOAD_FOLDER = os.path.join(
+    os.getcwd(),
+    "uploads"
+)
+
+os.makedirs(
+    UPLOAD_FOLDER,
+    exist_ok=True
+)
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+
 @app.route("/upload", methods=["POST"])
 def upload():
-    
+    if "username" not in session:
+        return redirect("/login")
 
     audio = request.files.get("audio")
 
     if audio is None:
-        return redirect("/")
+        return redirect("/home")
 
     if audio.filename == "":
-        return redirect("/")
-
+        return redirect("/home")
 
     path = os.path.join(
-
-            app.config["UPLOAD_FOLDER"],
-
-            audio.filename
-
-            )
-
+        app.config["UPLOAD_FOLDER"],
+        audio.filename
+    )
 
     audio.save(path)
-    print("\n")
-    print("====================================")
 
-    print("UPLOAD SUCCESSFUL") 
+    print("\n====================================")
+    print("UPLOAD SUCCESSFUL")
     print("====================================")
     print("Filename :", audio.filename)
-    print("Saved Path :", path) 
-    print("====================================")
-    print("\n")
-
+    print("Saved Path :", path)
+    print("====================================\n")
 
     path = convert_audio(path)
-    print("\n")
-    print("AFTER CONVERSION")
+
+    print("\nAFTER CONVERSION")
     print("Current Path :", path)
-    print("\n")
-
-
+    print()
 
     session["filepath"] = os.path.abspath(path)
 
-
     return redirect("/processing")
+
+
 @app.route("/processing")
 def processing():
+    if "username" not in session:
+        return redirect("/login")
 
-    return render_template(
-            "processing.html"
-            )
+    if "filepath" not in session:
+        return redirect("/home")
+
+    return render_template("processing.html")
+
+
 @app.route("/analyze")
 def analyze():
+    if "username" not in session:
+        return redirect("/login")
+
+    if "filepath" not in session:
+        return redirect("/home")
 
     path = session["filepath"]
-
-
     results = analyze_speech(path)
 
-
     return render_template(
+        "result.html",
+        result=results
+    )
 
-            "result.html",
-
-            result=results
-
-            )
 
 if __name__ == "__main__":
     app.run(debug=True)

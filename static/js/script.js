@@ -1,8 +1,73 @@
+let seconds=0;
+
+let timer=null;
 let recorder;
 let audioChunks = [];
 
 
 async function startRecording(){
+    seconds = 0;
+
+if(timer){
+    clearInterval(timer);
+}
+    document.getElementById(
+
+"recording-status"
+
+).innerHTML="🔴 RECORDING";
+
+
+document.getElementById(
+
+"recording-message"
+
+).innerHTML=
+
+"AI is Listening Carefully...";
+
+
+document.getElementById(
+
+"voice-wave"
+
+).style.visibility="visible";
+
+
+
+timer=setInterval(function(){
+
+
+seconds++;
+
+
+let mins=Math.floor(
+
+seconds/60
+
+);
+
+
+let secs=seconds%60;
+
+
+
+document.getElementById(
+
+"timer"
+
+).innerHTML=
+
+String(mins).padStart(2,"0")
+
++":"
+
++
+
+String(secs).padStart(2,"0");
+
+
+},1000);
 
     const stream =
     await navigator.mediaDevices.getUserMedia(
@@ -30,6 +95,32 @@ async function startRecording(){
 
 
 function stopRecording(){
+    clearInterval(timer);
+
+
+document.getElementById(
+
+"recording-status"
+
+).innerHTML=
+
+"✓ RECORDING COMPLETED";
+
+
+document.getElementById(
+
+"recording-message"
+
+).innerHTML=
+
+"Preparing Audio for Analysis...";
+
+
+document.getElementById(
+
+"voice-wave"
+
+).style.visibility="hidden";
 
 
     recorder.stop();
