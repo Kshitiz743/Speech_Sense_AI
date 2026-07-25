@@ -10,7 +10,6 @@ from flask import (
     request,
     session
 )
-from speech_to_text import speech_to_text
 
 from audio_converter import convert_audio
 from analysis_engine import analyze_speech
@@ -19,62 +18,67 @@ import os
 import sqlite3
 
 
-
-
-
 BASE_DIR = os.path.abspath(
-            os.path.dirname(__file__)
-            )
+    os.path.dirname(__file__)
+)
 
 DATABASE_PATH = os.path.join(
-                BASE_DIR,
-                "users.db"
-                )
+    BASE_DIR,
+    "users.db"
+)
+
+UPLOAD_FOLDER = os.path.join(
+    BASE_DIR,
+    "uploads"
+)
 
 
 def get_connection():
+    return sqlite3.connect(DATABASE_PATH)
 
-    return sqlite3.connect(
-            DATABASE_PATH
-            )
+
 def create_database():
-    print(DATABASE_PATH)
 
     connection = get_connection()
-
     cursor = connection.cursor()
 
-    cursor.execute("""
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS users(
 
-    CREATE TABLE IF NOT EXISTS users(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL
 
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    username TEXT NOT NULL,
-
-    email TEXT UNIQUE NOT NULL,
-
-    password TEXT NOT NULL
-
+        )
+        """
     )
 
-    """)
-
     connection.commit()
-
     connection.close()
 
 
-app = Flask(__name__)
-app.secret_key = os.environ.get(
-
-        "SECRET_KEY",
-
-        "SpeechSense_AI_Project_2026"
-
+os.makedirs(
+    UPLOAD_FOLDER,
+    exist_ok=True
 )
 
+app = Flask(__name__)
+
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "SpeechSense_AI_Project_2026"
+)
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
 create_database()
+
+
+@app.route("/")
+def root():
+    return redirect("/login")
 
 
 @app.route("/signup")
@@ -84,11 +88,14 @@ def signup_page():
 
 @app.route("/signup", methods=["POST"])
 def signup():
+
     username = request.form["username"]
     email = request.form["email"]
     password = request.form["password"]
 
-    hashed_password = generate_password_hash(password)
+    hashed_password = generate_password_hash(
+        password
+    )
 
     connection = get_connection()
     cursor = connection.cursor()
@@ -96,12 +103,16 @@ def signup():
     cursor.execute(
         """
         INSERT INTO users(
+
         username,
         email,
         password
+
         )
+
         VALUES(?,?,?)
         """,
+
         (
             username,
             email,
@@ -115,11 +126,6 @@ def signup():
     return redirect("/login")
 
 
-@app.route("/")
-def root():
-    return redirect("/login")
-
-
 @app.route("/login", methods=["GET"])
 def login_page():
     return render_template("login.html")
@@ -127,6 +133,7 @@ def login_page():
 
 @app.route("/login", methods=["POST"])
 def login():
+
     email = request.form["email"]
     password = request.form["password"]
 
@@ -136,20 +143,26 @@ def login():
     cursor.execute(
         """
         SELECT *
+
         FROM users
+
         WHERE email=?
         """,
+
         (email,)
     )
 
     user = cursor.fetchone()
+
     connection.close()
 
     if user and check_password_hash(
         user[3],
         password
     ):
+
         session["username"] = user[1]
+
         return redirect("/home")
 
     return redirect("/login")
@@ -157,6 +170,7 @@ def login():
 
 @app.route("/home")
 def home():
+
     if "username" not in session:
         return redirect("/login")
 
@@ -165,26 +179,17 @@ def home():
 
 @app.route("/logout")
 def logout():
+
     session.clear()
+
     return redirect("/login")
-
-
-UPLOAD_FOLDER = os.path.join(
-    os.getcwd(),
-    "uploads"
-)
-
-os.makedirs(
-    UPLOAD_FOLDER,
-    exist_ok=True
-)
-
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
 @app.route("/upload", methods=["POST"])
 def upload():
-    print(session)
+
+    print("\nUPLOAD SESSION :", session)
+
     if "username" not in session:
         return redirect("/login")
 
@@ -208,7 +213,7 @@ def upload():
     print("====================================")
     print("Filename :", audio.filename)
     print("Saved Path :", path)
-    print("====================================\n")
+    print("====================================")
 
     path = convert_audio(path)
 
@@ -218,30 +223,40 @@ def upload():
 
     session["filepath"] = os.path.abspath(path)
 
+    print("FILEPATH SAVED :")
+    print(session["filepath"])
+    print()
+
     return redirect("/processing")
 
 
 @app.route("/processing")
 def processing():
+
+    print("\nPROCESSING SESSION :")
     print(session)
+    print()
+
     if "username" not in session:
         return redirect("/login")
 
     if "filepath" not in session:
         return redirect("/home")
 
-    return render_template("processing.html")
+    return render_template(
+        "processing.html"
+    )
 
 
 @app.route("/analyze")
 def analyze():
+
+    print("\nANALYZE SESSION :")
     print(session)
+    print()
 
-    print("\nINSIDE ANALYZE")
-
-    print(session)
-
-    print("\n")
+    if "username" not in session:
+        return redirect("/login")
 
     if "filepath" not in session:
 
@@ -249,25 +264,21 @@ def analyze():
 
         return redirect("/home")
 
+    path = session["filepath"]
 
-    path=session["filepath"]
-
+    print("CURRENT FILE :")
     print(path)
+    print()
 
-    results=analyze_speech(path)
+    results = analyze_speech(path)
 
     print("ANALYSIS COMPLETED")
+    print()
 
     return render_template(
-
         "result.html",
-
         result=results
-
     )
-        
-
-
 
 
 if __name__ == "__main__":
