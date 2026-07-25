@@ -22,8 +22,21 @@ app = Flask(__name__)
 app.secret_key = "SpeechSense_AI_Project_2026"
 
 
+BASE_DIR = os.path.abspath(
+            os.path.dirname(__file__)
+            )
+
+DATABASE_PATH = os.path.join(
+                BASE_DIR,
+                "users.db"
+                )
+
+
 def get_connection():
-    return sqlite3.connect("users.db")
+
+    return sqlite3.connect(
+            DATABASE_PATH
+            )
 
 
 @app.route("/signup")
@@ -196,6 +209,7 @@ def analyze():
         result=results
     )
 
+create_database()
 
 if __name__ == "__main__":
     app.run(debug=True)

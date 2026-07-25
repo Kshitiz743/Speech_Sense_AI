@@ -1,37 +1,33 @@
 import sqlite3
 
 
+def get_connection():
+
+    return sqlite3.connect("users.db")
+
+
 def create_database():
 
-    connection = sqlite3.connect("users.db")
+    connection = get_connection()
 
     cursor = connection.cursor()
 
-
     cursor.execute("""
 
-        CREATE TABLE IF NOT EXISTS users(
+    CREATE TABLE IF NOT EXISTS users(
 
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-        username TEXT NOT NULL,
+    username TEXT NOT NULL,
 
-        email TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
 
-        password TEXT NOT NULL
+    password TEXT NOT NULL
 
-        )
+    )
 
     """)
-
 
     connection.commit()
 
     connection.close()
-
-
-    print("\nDatabase Created Successfully!")
-    print("users.db is Ready.\n")
-
-
-create_database()
