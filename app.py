@@ -10,6 +10,7 @@ from flask import (
     request,
     session
 )
+from speech_to_text import speech_to_text
 
 from audio_converter import convert_audio
 from analysis_engine import analyze_speech
