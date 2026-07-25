@@ -66,7 +66,13 @@ def create_database():
 
 
 app = Flask(__name__)
-app.secret_key = "SpeechSense_AI_Project_2026"
+app.secret_key = os.environ.get(
+
+        "SECRET_KEY",
+
+        "SpeechSense_AI_Project_2026"
+
+)
 
 create_database()
 
@@ -178,6 +184,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 @app.route("/upload", methods=["POST"])
 def upload():
+    print(session)
     if "username" not in session:
         return redirect("/login")
 
@@ -216,6 +223,7 @@ def upload():
 
 @app.route("/processing")
 def processing():
+    print(session)
     if "username" not in session:
         return redirect("/login")
 
@@ -227,6 +235,7 @@ def processing():
 
 @app.route("/analyze")
 def analyze():
+    print(session)
 
     print("\nINSIDE ANALYZE")
 
