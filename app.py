@@ -226,11 +226,14 @@ def processing():
 
 @app.route("/analyze")
 def analyze():
+        path=session["filepath"]
+
+        text=speech_to_text(path)
+   
+        return text
 
 
-    path=session["filepath"]
 
-    return str(path)
 
 if __name__ == "__main__":
     app.run(debug=True)
