@@ -37,6 +37,7 @@ def get_connection():
             DATABASE_PATH
             )
 def create_database():
+    print(DATABASE_PATH)
 
     connection = get_connection()
 
@@ -62,9 +63,12 @@ def create_database():
 
     connection.close()
 
-    
+
 app = Flask(__name__)
 app.secret_key = "SpeechSense_AI_Project_2026"
+
+create_database()
+
 
 @app.route("/signup")
 def signup_page():
@@ -236,7 +240,6 @@ def analyze():
         result=results
     )
 
-create_database()
 
 if __name__ == "__main__":
     app.run(debug=True)
