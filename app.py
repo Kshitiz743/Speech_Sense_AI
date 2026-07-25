@@ -228,10 +228,10 @@ def processing():
 @app.route("/analyze")
 def analyze():
         path=session["filepath"]
+        results=analyze_speech(path)
 
-        text=speech_to_text(path)
-   
-        return text
+        return str(results)
+        
 
 
 
