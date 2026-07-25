@@ -113,7 +113,7 @@ let loading = setInterval(function(){
 
             window.location.href="/analyze";
 
-        },1000);
+        },8000);
 
     }
 

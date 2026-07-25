@@ -227,10 +227,35 @@ def processing():
 
 @app.route("/analyze")
 def analyze():
-        path=session["filepath"]
-        results=analyze_speech(path)
 
-        return str(results)
+    print("\nINSIDE ANALYZE")
+
+    print(session)
+
+    print("\n")
+
+    if "filepath" not in session:
+
+        print("NO FILEPATH FOUND")
+
+        return redirect("/home")
+
+
+    path=session["filepath"]
+
+    print(path)
+
+    results=analyze_speech(path)
+
+    print("ANALYSIS COMPLETED")
+
+    return render_template(
+
+        "result.html",
+
+        result=results
+
+    )
         
 
 
