@@ -1,17 +1,21 @@
-import librosa
+import wave
 
 
 def get_duration(filepath):
 
-    duration = librosa.get_duration(path=filepath)
+    with wave.open(filepath, "rb") as audio:
+
+        frames = audio.getnframes()
+
+        rate = audio.getframerate()
+
+        duration = frames / float(rate)
 
     return round(duration,2)
 
 
 
 def pause_count(duration):
-
-    # temporary logic
 
     if duration < 30:
 
