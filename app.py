@@ -226,7 +226,11 @@ def processing():
 
 @app.route("/analyze")
 def analyze():
-     return "Analyze page reached successfully."
+
+
+    path=session["filepath"]
+
+    return str(path)
 
 if __name__ == "__main__":
     app.run(debug=True)
