@@ -43,7 +43,7 @@ Whether you're preparing for interviews, presentations, debates, seminars or pub
 
 <p align="center">
 
-<img src="assets/banner.gif" width="900">
+https://speech-sense-ai.onrender.com/login
 
 </p>
 
