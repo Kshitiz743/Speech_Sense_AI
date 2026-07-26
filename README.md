@@ -43,7 +43,7 @@ Whether you're preparing for interviews, presentations, debates, seminars or pub
 
 <p align="center">
 
-<img src="assets/demo.gif" width="900">
+<img src="assets/banner.gif" width="900">
 
 </p>
 
