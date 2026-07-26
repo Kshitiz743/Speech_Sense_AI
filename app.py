@@ -1,36 +1,13 @@
-from werkzeug.security import (
-    generate_password_hash,
-    check_password_hash
-)
-
-from flask import (
-    Flask,
-    render_template,
-    redirect,
-    request,
-    session
-)
-
+from werkzeug.security import (generate_password_hash, check_password_hash)
+from flask import (Flask,render_template,redirect, request,session)
 from audio_converter import convert_audio
 from analysis_engine import analyze_speech
-
 import os
 import sqlite3
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DATABASE_PATH = os.path.join(BASE_DIR,"users.db")
 
-
-BASE_DIR = os.path.abspath(
-    os.path.dirname(__file__)
-)
-
-DATABASE_PATH = os.path.join(
-    BASE_DIR,
-    "users.db"
-)
-
-UPLOAD_FOLDER = os.path.join(
-    BASE_DIR,
-    "uploads"
-)
+UPLOAD_FOLDER = os.path.join(BASE_DIR,"uploads")
 
 
 def get_connection():
@@ -38,81 +15,54 @@ def get_connection():
 
 
 def create_database():
-
     connection = get_connection()
     cursor = connection.cursor()
-
     cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS users(
-
+        """CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
-
-        )
+        password TEXT NOT NULL)
         """
     )
-
     connection.commit()
     connection.close()
 
 
-os.makedirs(
-    UPLOAD_FOLDER,
-    exist_ok=True
-)
+os.makedirs(UPLOAD_FOLDER,exist_ok=True)
 
 app = Flask(__name__)
-
 app.secret_key = os.environ.get(
     "SECRET_KEY",
     "SpeechSense_AI_Project_2026"
 )
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
 create_database()
-
-
 @app.route("/")
 def root():
     return redirect("/login")
 
-
 @app.route("/signup")
 def signup_page():
     return render_template("signup.html")
-
-
 @app.route("/signup", methods=["POST"])
 def signup():
-
     username = request.form["username"]
     email = request.form["email"]
     password = request.form["password"]
-
-    hashed_password = generate_password_hash(
-        password
-    )
-
+    hashed_password = generate_password_hash(password)
     connection = get_connection()
     cursor = connection.cursor()
-
     cursor.execute(
         """
         INSERT INTO users(
-
         username,
         email,
         password
-
         )
-
         VALUES(?,?,?)
         """,
-
         (
             username,
             email,
@@ -122,164 +72,112 @@ def signup():
 
     connection.commit()
     connection.close()
-
     return redirect("/login")
-
 
 @app.route("/login", methods=["GET"])
 def login_page():
     return render_template("login.html")
 
-
 @app.route("/login", methods=["POST"])
 def login():
-
     email = request.form["email"]
     password = request.form["password"]
-
     connection = get_connection()
     cursor = connection.cursor()
-
     cursor.execute(
         """
         SELECT *
-
         FROM users
-
         WHERE email=?
         """,
-
         (email,)
     )
-
     user = cursor.fetchone()
-
     connection.close()
-
     if user and check_password_hash(
         user[3],
         password
     ):
-
         session["username"] = user[1]
-
         return redirect("/home")
-
     return redirect("/login")
-
 
 @app.route("/home")
 def home():
-
     if "username" not in session:
         return redirect("/login")
-
     return render_template("index.html")
-
 
 @app.route("/logout")
 def logout():
-
     session.clear()
-
     return redirect("/login")
-
 
 @app.route("/upload", methods=["POST"])
 def upload():
-
     print("\nUPLOAD SESSION :", session)
-
     if "username" not in session:
         return redirect("/login")
-
     audio = request.files.get("audio")
-
     if audio is None:
         return redirect("/home")
-
     if audio.filename == "":
         return redirect("/home")
-
     path = os.path.join(
         app.config["UPLOAD_FOLDER"],
         audio.filename
     )
-
     audio.save(path)
-
     print("\n====================================")
     print("UPLOAD SUCCESSFUL")
     print("====================================")
     print("Filename :", audio.filename)
     print("Saved Path :", path)
     print("====================================")
-
     path = convert_audio(path)
-
     print("\nAFTER CONVERSION")
     print("Current Path :", path)
     print()
-
     session["filepath"] = os.path.abspath(path)
-
     print("FILEPATH SAVED :")
     print(session["filepath"])
     print()
-
     return redirect("/processing")
-
 
 @app.route("/processing")
 def processing():
-
     print("\nPROCESSING SESSION :")
     print(session)
     print()
-
     if "username" not in session:
         return redirect("/login")
-
     if "filepath" not in session:
         return redirect("/home")
-
     return render_template(
         "processing.html"
     )
 
-
 @app.route("/analyze")
 def analyze():
-
     print("\nANALYZE SESSION :")
     print(session)
     print()
-
     if "username" not in session:
         return redirect("/login")
-
     if "filepath" not in session:
-
         print("NO FILEPATH FOUND")
-
         return redirect("/home")
-
     path = session["filepath"]
-
     print("CURRENT FILE :")
     print(path)
     print()
-
     results = analyze_speech(path)
-
     print("ANALYSIS COMPLETED")
     print()
-
     return render_template(
         "result.html",
         result=results
     )
-
 
 if __name__ == "__main__":
     app.run(debug=True)

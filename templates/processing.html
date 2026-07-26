@@ -1,91 +1,37 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
 <title>AI Analysis</title>
-
 <link rel="stylesheet"
 href="{{url_for('static',filename='css/style.css')}}">
-
 </head>
-
 <body>
-
-
 <div class="processing-card">
-
-
 <h1>SpeechSense AI</h1>
-
 <h3>AI Powered Public Speech Analyzer</h3>
-
-
 <div class="loader"></div>
-
-
-<h2 id="percentage">
-
-0%
-
-</h2>
-
-
-<p id="status">
-
-Preparing Analysis....
-
-</p>
-
-
+<h2 id="percentage">0%</h2>
+<p id="status">Preparing Analysis....</p>
 <div class="progress-container">
-
 <div class="progress-bar"
 id="progress-bar">
-
 </div>
-
 </div>
-
 
 <div class="analysis-box">
-
-
 <p>✓ Audio Uploaded</p>
-
 <p>✓ Speech Recognition</p>
-
 <p>✓ Word Count Analysis</p>
-
 <p>✓ Speaking Pace Evaluation</p>
-
 <p>✓ Confidence Analysis</p>
-
 <p>✓ Tone Detection</p>
-
 <p>✓ AI Suggestions Generated</p>
-
 <p>✓ Preparing Final Report</p>
-
-
 </div>
-
-
-<h4>
-
-"Evaluating Your Public Speaking Skills"
-
-</h4>
-
-
+<h4>"Evaluating Your Public Speaking Skills"</h4>
 </div>
-
-
 
 <script src="{{url_for('static',
 filename='js/processing.js')}}"></script>
-
-
 </body>
-
 </html>

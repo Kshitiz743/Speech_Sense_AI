@@ -1,138 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
-
 <title>SpeechSense AI</title>
-
 <link rel="stylesheet"
 href="{{url_for('static',filename='css/style.css')}}">
 
-
 <!-- GOOGLE FONTS -->
-
 <link rel="preconnect"
 href="https://fonts.googleapis.com">
-
 <link rel="preconnect"
 href="https://fonts.gstatic.com"
 crossorigin>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
 rel="stylesheet">
-
 </head>
-
-
 <body>
 
 
 <!-- NAVBAR -->
-
-
 <nav>
 <h3>
-
 Welcome,
-
 {{session.username}}
-
 </h3>
 <a href="/logout">
-
-<button>
-
-Logout
-
-</button>
-
-</a>
+<button>Logout</button></a>
 <h2>SpeechSense AI</h2>
-
-
 <ul>
-
 <li>Home</li>
-
 <li>Features</li>
-
 <li>About</li>
-
 <li>Contact</li>
-
 </ul>
-
-
 </nav>
 
 
-
-
 <!-- HERO SECTION -->
-
-
 <section class="hero">
-
-
 <h1>AI Powered Public Speaking Analyzer</h1>
-
-
 <h3>
-
 Speak • Analyze • Improve • Perform Better
-
 </h3>
-
-
 <p>
-
 Improve your public speaking skills using Artificial
 Intelligence, NLP and Speech Analytics.
-
 </p>
-
-
-
 <div class="mic">
-
 🎙️
-
 </div>
 
 
 
 <!-- RECORDING STATUS -->
-
 <div class="recording-section">
-
-
-<h2 id="recording-status">
-
-READY TO RECORD
-
-</h2>
-
-
-<h3 id="timer">
-
-00:00
-
-</h3>
+<h2 id="recording-status">READY TO RECORD</h2>
+<h3 id="timer">00:00</h3>
 
 
 
 <!-- SOUND WAVES -->
-
-
-<div class="voice-wave"
-id="voice-wave">
-
-
+<div class="voice-wave" id="voice-wave">
 <span></span>
 <span></span>
 <span></span>
@@ -140,303 +70,109 @@ id="voice-wave">
 <span></span>
 <span></span>
 <span></span>
-
-
 </div>
-
-
-
-<p id="recording-message">
-
-Click Start Recording to Begin
-
-</p>
-
-
+<p id="recording-message">Click Start Recording to Begin</p>
 </div>
-
-
-
 <!-- BUTTONS -->
-
-
 <div class="record-buttons">
-
-
 <button class="start-btn"
-
-onclick="startRecording()">
-
-🎙 START
-
-</button>
-
-
-
-<button class="stop-btn"
-
-onclick="stopRecording()">
-
+onclick="startRecording()">🎙 START</button>
+<button class="stop-btn" onclick="stopRecording()">
 ■ STOP
-
 </button>
-
-
 </div>
 
-
 <br>
-
-
 <h4>OR</h4>
-
-
-<form action="/upload"
-method="POST"
-enctype="multipart/form-data">
-
-
+<form action="/upload" method="POST" enctype="multipart/form-data">
 <div class="upload-box">
-
-
 <label for="audio">
-
-
-<h3>
-
-Upload Audio File
-
-</h3>
-
-
-<p>
-
-Drag & Drop Here
-
-<br>
-
+<h3>Upload Audio File</h3>
+<p>Drag & Drop Here<br>
 or Click to Browse.
-
 </p>
-
-
-<p>
-
-Supported Formats
-
+<p>Supported Formats
 <br>
-
-.wav & .mp3
-
-</p>
-
-
-
+.wav & .mp3</p>
 </label>
-
-
-
-<input type="file"
-id="audio"
-name="audio"
-accept=".wav,.mp3"
-required
-hidden>
-
-
+<input type="file" id="audio" name="audio" accept=".wav,.mp3" required hidden>
 </div>
-
-
 <br>
-
-
-<button class="upload">
-
-Analyze Speech
-
-</button>
-
-
+<button class="upload">Analyze Speech</button>
 </form>
-
-
-
 </section>
-
-
-
 
 <!-- FEATURES -->
-
-
 <section class="features">
-
-
 <h1>WHY SPEECHSENSE AI ?</h1>
-
-
-
 <div class="cards">
-
-
 <div class="card">
-
 <h2>Speech Recognition</h2>
-
 <p>Convert speech into meaningful text.</p>
-
 </div>
-
-
-
 <div class="card">
-
 <h2>Fluency Analysis</h2>
-
 <p>Evaluate speaking quality.</p>
-
 </div>
-
-
-
-
 <div class="card">
-
 <h2>Confidence Score</h2>
-
 <p>Analyze confidence while speaking.</p>
-
 </div>
-
-
-
 <div class="card">
-
 <h2>Pause Detection</h2>
-
 <p>Detect unwanted speech pauses.</p>
-
 </div>
 
-
-
-
 <div class="card">
-
 <h2>Speech Pace</h2>
-
 <p>Calculate words per minute.</p>
-
 </div>
-
-
-
 
 <div class="card">
-
 <h2>AI Suggestions</h2>
-
 <p>Get intelligent improvement tips.</p>
-
 </div>
-
-
-
 </div>
-
-
 </section>
-
-
-
 
 <!-- HOW IT WORKS -->
-
-
 <section class="works">
-
-
 <h1>HOW IT WORKS</h1>
-
-
 <div class="flow">
-
-
 <p>Upload Audio</p>
-
 ↓
-
 <p>Speech Recognition</p>
-
 ↓
-
 <p>NLP Processing</p>
-
 ↓
-
 <p>Speech Analysis</p>
-
 ↓
-
 <p>AI Evaluation</p>
-
 ↓
-
 <p>Detailed Report</p>
-
 ↓
-
 <p>Download PDF Report</p>
-
-
 </div>
-
-
 </section>
-
-
-
 
 <!-- PERFORMANCE -->
-
-
 <section class="performance">
-
-
 <h1>PERFORMANCE</h1>
-
-
 <h3>95% Accuracy</h3>
-
 <h3>Real Time Analysis</h3>
-
 <h3>Multi Format Support</h3>
-
-
 </section>
-
-
 
 
 <!-- FOOTER -->
-
-
 <footer>
-
 <h2>
-
 Powered By Flask • AI • NLP • Python
-
 </h2>
-
 </footer>
-
-
 <script src=
 "{{url_for('static',
 filename='js/script.js')}}">
 </script>
-
 </body>
-
 </html>

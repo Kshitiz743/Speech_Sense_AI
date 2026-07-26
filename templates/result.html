@@ -1,223 +1,57 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
-<title>
-
-SpeechSense AI
-
-</title>
-
+<title>SpeechSense AI+</title>
 <link rel="stylesheet"
-
 href="{{url_for('static',
 filename='css/style.css')}}">
-
 </head>
-
-
 <body>
-
-
-
 <div class="dashboard">
-
-
-<h1>
-
-SpeechSense AI
-
-</h1>
-
-
+<h1>SpeechSense AI</h1>
 <h2>
-
-<h2>
-
-🏆 {{result.grade}}
-
+<h2>🏆 {{result.grade}}
 </h2>
-
 </h2>
-
-
 <h1>
-
 {{result.overall}} /100
-
 </h1>
-
-<h3>
-
-AI Speech Evaluation Score
-
-</h3>
-
-
+<h3>AI Speech Evaluation Score</h3>
 <hr>
-
-
-<h2>
-
-Performance Analysis
-
-</h2>
-
-
-<p>
-
-Fluency : {{result.fluency}} %
-
-</p>
+<h2>Performance Analysis</h2>
+<p>Fluency : {{result.fluency}} %</p>
 
 <div class="progress">
-
 <div class="bar"
-
 style="width:{{result.fluency}}%">
-
+</div>
 </div>
 
-</div>
-
-
-
-<p>
-
-Confidence : {{result.confidence}} %
-
-</p>
-
+<p>Confidence : {{result.confidence}} %</p>
 <div class="progress">
-
 <div class="bar"
-
 style="width:{{result.confidence}}%">
-
+</div>
 </div>
 
-</div>
-
-
-
 <hr>
-
-
-
-<h2>
-
-Speech Statistics
-
-</h2>
-
-
-
-<p>
-
-Duration :
-{{result.duration}} sec
-
-</p>
-
-
-<p>
-
-Words Spoken :
-{{result.words}}
-
-</p>
-
-
-
-<p>
-
-Speaking Speed :
-{{result.wpm}} WPM
-
-</p>
-
-
-
-<p>
-
-Pause Count :
-{{result.pauses}}
-
-</p>
-
-
-
-<p>
-
-Filler Words :
-{{result.fillers}}
-
-</p>
-
-
-
-<p>
-
-Speech Tone :
-{{result.tone}}
-
-</p>
-
-
-
+<h2>Speech Statistics</h2>
+<p>Duration :{{result.duration}} sec</p>
+<p>Words Spoken :{{result.words}}</p>
+<p>Speaking Speed :{{result.wpm}} WPM</p>
+<p>Pause Count :{{result.pauses}}</p>
+<p>Filler Words :{{result.fillers}}</p>
+<p>Speech Tone :{{result.tone}}</p>
 <hr>
-
-
-
-<h2>
-
-AI Suggestions
-
-</h2>
-
-
-
-<ul>
-
-{% for tip in result.suggestions %}
-
-
-<li>
-
-{{tip}}
-
-</li>
-
-
+<h2>AI Suggestions</h2>
+<ul>{% for tip in result.suggestions %}
+<li>{{tip}}</li>
 {% endfor %}
-
-
 </ul>
-
-
-
 </div>
 <hr>
-
-
-<h2>
-
-Speech Transcript
-
-</h2>
-
-
-<p>
-
-{{result.text}}
-
-</p>
-
-
+<h2>Speech Transcript</h2>
+<p>{{result.text}}</p>
 <hr>
-
-
 </body>
-
 </html>

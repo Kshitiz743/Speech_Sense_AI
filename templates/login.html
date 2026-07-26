@@ -1,91 +1,30 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
 <title>Login | SpeechSense AI</title>
-
 <link rel="stylesheet"
 href="{{url_for('static',
 filename='css/style.css')}}">
-
 </head>
-
-
 <body>
-
-
 <div class="auth-container">
-
-
-<h1>
-
-SpeechSense AI
-
-</h1>
-
-
-<h3>
-
-Welcome Back !
-
-</h3>
-
-
-
+<h1>SpeechSense AI</h1>
+<h3>Welcome Back !</h3>
 <form action="/login"
-
 method="POST">
-
-
 <input type="email"
-
 name="email"
-
 placeholder="Email Address"
-
 required>
-
-
-
 <input type="password"
-
 name="password"
-
 placeholder="Password"
-
 required>
 
-
-
-<button class="login-btn">
-
-LOGIN
-
-</button>
-
-
+<button class="login-btn">LOGIN</button>
 </form>
-
-
-
-<p>
-
-Don't have an account?
-
-</p>
-
-
-<a href="/signup">
-
-SIGN UP HERE
-
-</a>
-
-
+<p>Don't have an account?</p>
+<a href="/signup">SIGN UP HERE</a>
 </div>
-
-
 </body>
-
 </html>
